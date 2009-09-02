@@ -170,14 +170,14 @@ public class GAELuceneServlet extends HttpServlet {
         pm.close();
     }
 
-    // 解析queryString中的参数
+    // parse parameter-value pairs from queryString
     private Properties getRequestParameters(String queryString, String encoding) {
         Properties parameters = new Properties();
         if (queryString == null || queryString.trim().length() <= 0) {
             return parameters;
         }
         int i = 0;
-        // 忽略有效参数前的无效字符
+        // skip invalid prefix
         char c = queryString.charAt(i);
         while (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) {
             c = queryString.charAt(++i);
@@ -187,7 +187,7 @@ public class GAELuceneServlet extends HttpServlet {
             queryString = queryString.substring(i);
         }
 
-        // 把'&amp;'替换为'&'
+        // replace '&amp;' with '&'
         queryString = queryString.replaceAll("&amp;", "&");
         String[] tokens = queryString.split("[&]");
         for (int j=0; j<tokens.length; j++) {
@@ -216,7 +216,7 @@ public class GAELuceneServlet extends HttpServlet {
         // parse 'query string'
         Properties parameters = getRequestParameters(queryString, "UTF-8");
         String action = parameters.getProperty("do", "").trim();
-        // 注册接收索引文件
+        // register new index file
         if ("register".equals(action)) {
             String category = parameters.getProperty("cat", "").trim();
             long version = Long.parseLong(parameters.getProperty("ver", "0").trim());
@@ -232,7 +232,7 @@ public class GAELuceneServlet extends HttpServlet {
             PrintWriter out = response.getWriter();
             out.print(fileId);
         }
-        // 接收索引文件
+        // commit file segments
         else if ("commit".equals(action)) {
             long fileId = Long.parseLong(parameters.getProperty("fileId", "0").trim());
             int segmentNo = Integer.parseInt(parameters.getProperty("segmentNo", "0").trim());
@@ -251,7 +251,7 @@ public class GAELuceneServlet extends HttpServlet {
             byte[] data = dos.toByteArray();
             GAEFileContentJDO.saveOrUpdate(new Long(fileId), new Integer(segmentNo), new Long(segmentLength), data);
         }
-        // 激活最新提交的索引
+        // active the new index
         else if ("activate".equals(action)) {
             String category = parameters.getProperty("cat", "").trim();
             long version = Long.parseLong(parameters.getProperty("ver", "0").trim());
