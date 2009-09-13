@@ -17,27 +17,21 @@ package org.apache.gaelucene.auth;
  * limitations under the License.
  */
 
-import javax.servlet.http.HttpServletRequest;
+/**
+ * Permission/Authentication framework learned from Mvnforum 
+ * @see http://www.mvnforum.com/
+ * 
+ * $Id:$
+ */
+public abstract class GAELuceneAbstractPermission implements GAELucenePermission {
+  public static final int[] globalCombinedPermissionArray = { PERMISSION_SYSTEM_ADMIN, };
 
-import com.google.appengine.api.users.User;
-
-public class GAEOnlineUser {
-	private User user = null;
-
-	GAEOnlineUser(HttpServletRequest request, User user) {
-		this.user = user;
+  public static String getDescription(int permission) {
+    switch (permission) {
+    case PERMISSION_SYSTEM_ADMIN:
+      return "System Admin";
     }
 
-	public String getAuthDomain() {
-		return user.getAuthDomain();
-	}
-
-	public String getEmail() {
-		return user.getEmail();
-	}
-
-	public String getNickname() {
-		return user.getNickname();
-	}
-
+    return "Unknown(" + permission + ")";
+  }
 }
