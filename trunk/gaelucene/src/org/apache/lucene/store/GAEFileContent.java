@@ -25,61 +25,66 @@ import javax.jdo.annotations.PrimaryKey;
 
 import com.google.appengine.api.datastore.Blob;
 
+/**
+ * GAEFileContent stands for (part of) the index file's byte content.
+ * 
+ * $Id:$
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAEFileContent {
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long cid;
-    
-    @Persistent
-    private Long fileId;
-    
-    @Persistent
-    private int segmentNo;
-    
-    @Persistent
-    private Long segmentLength;
+  @PrimaryKey
+  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+  private Long cid;
 
-    @Persistent
-	private Blob content;
+  @Persistent
+  private Long fileId;
 
-	public Long getId() {
-		return cid;
-	}
+  @Persistent
+  private int segmentNo;
 
-	public void setId(Long id) {
-		this.cid = id;
-	}
+  @Persistent
+  private Long segmentLength;
 
-	public Long getFileId() {
-		return fileId;
-	}
+  @Persistent
+  private Blob content;
 
-	public void setFileId(Long fileId) {
-		this.fileId = fileId;
-	}
+  public Long getId() {
+    return cid;
+  }
 
-	public int getSegmentNo() {
-		return segmentNo;
-	}
+  public void setId(Long id) {
+    this.cid = id;
+  }
 
-	public void setSegmentNo(int segmentNo) {
-		this.segmentNo = segmentNo;
-	}
+  public Long getFileId() {
+    return fileId;
+  }
 
-	public Long getSegmentLength() {
-		return segmentLength;
-	}
+  public void setFileId(Long fileId) {
+    this.fileId = fileId;
+  }
 
-	public void setSegmentLength(Long segmentLength) {
-		this.segmentLength = segmentLength;
-	}
+  public int getSegmentNo() {
+    return segmentNo;
+  }
 
-	public Blob getContent() {
-		return content;
-	}
+  public void setSegmentNo(int segmentNo) {
+    this.segmentNo = segmentNo;
+  }
 
-	public void setContent(Blob content) {
-		this.content = content;
-	}
+  public Long getSegmentLength() {
+    return segmentLength;
+  }
+
+  public void setSegmentLength(Long segmentLength) {
+    this.segmentLength = segmentLength;
+  }
+
+  public Blob getContent() {
+    return content;
+  }
+
+  public void setContent(Blob content) {
+    this.content = content;
+  }
 }
