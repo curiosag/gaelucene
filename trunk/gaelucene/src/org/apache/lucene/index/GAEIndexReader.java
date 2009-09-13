@@ -25,225 +25,223 @@ import org.apache.lucene.document.Document;
 import org.apache.lucene.document.FieldSelector;
 import org.apache.lucene.store.GAEDirectory;
 
+/**
+ * Wrapper for IndexReader that cached in {@link GAEIndexReaderPool}
+ * 
+ * $Id:$
+ */
 public class GAEIndexReader extends IndexReader {
-	// global logger
-	private static final Logger log = Logger.getLogger(GAEIndexReader.class.getName());
+  // global logger
+  private static Logger log = Logger.getLogger(GAEIndexReader.class.getName());
 
-	private static final String MESSAGE_DESTROIED = "Attempted to use GAEIndexReader after destroy() was called.";
+  private static final String MESSAGE_DESTROIED = "Attempted to use GAEIndexReader after destroy() was called.";
 
-	private long createdTime;
+  private long createdTime;
 
-	private boolean isClosed;
+  private boolean isClosed;
 
-	private boolean canClose;
+  private boolean canClose;
 
-	private int refCurCount;
+  private int refCurCount;
 
-	private int refTotalCount;
+  private int refTotalCount;
 
-	private long lastUsed;
+  private long lastUsed;
 
-	private IndexReader in;
+  private IndexReader in;
 
-	public GAEIndexReader(IndexReader in) {
-		this.in = in;
-		this.createdTime = System.currentTimeMillis();
-		this.isClosed = false;
-		this.refCurCount = 0;
-		this.refTotalCount = 0;
-		this.lastUsed = 0;
-	}
-	
-	public static GAEIndexReader getReader(GAEDirectory directory) throws IOException {
-		IndexReader in = IndexReader.open(directory);
-		return new GAEIndexReader(in);
-	}
-	
-	private void assertOpen() throws IOException {
-		if (isClosed) {
-			throw new IOException(MESSAGE_DESTROIED);
-		}
-	}
+  public GAEIndexReader(IndexReader in) {
+    this.in = in;
+    this.createdTime = System.currentTimeMillis();
+    this.isClosed = false;
+    this.refCurCount = 0;
+    this.refTotalCount = 0;
+    this.lastUsed = 0;
+  }
 
-	public long getCreatedTime() {
-		return createdTime;
-	}
+  public static GAEIndexReader getReader(GAEDirectory directory) throws IOException {
+    IndexReader in = IndexReader.open(directory);
+    return new GAEIndexReader(in);
+  }
 
-	public boolean isClosed() {
-		return isClosed;
-	}
+  private void assertOpen() throws IOException {
+    if (isClosed) {
+      throw new IOException(MESSAGE_DESTROIED);
+    }
+  }
 
-	public int getRefCurCount() {
-		return this.refCurCount;
-	}
+  public long getCreatedTime() {
+    return createdTime;
+  }
 
-	public int getRefTotalCount() {
-		return this.refTotalCount;
-	}
+  public boolean isClosed() {
+    return isClosed;
+  }
 
-	public long getLastUsed() {
-		return this.lastUsed;
-	}
+  public int getRefCurCount() {
+    return this.refCurCount;
+  }
 
-	public synchronized void borrow() throws IOException {
-		assertOpen();
-		this.refCurCount++;
-		this.refTotalCount++;
-		this.lastUsed = System.currentTimeMillis();
-	}
+  public int getRefTotalCount() {
+    return this.refTotalCount;
+  }
 
-	public synchronized void returnBack() throws IOException {
-		this.refCurCount--;
-		if (refCurCount <= 0 && canClose) {
-			log.info("GAEIndexReader.close(): no thread hold the reader, trying to close it!");
-			isClosed = true;
-			this.in.close();
-		}
-	}
+  public long getLastUsed() {
+    return this.lastUsed;
+  }
 
-	protected synchronized void destory() throws IOException {
-		if (refCurCount <= 0) {
-			log.info("GAEIndexReader.destory(): no thread hold the reader, trying to close it!");
-			isClosed = true;
-			this.in.close();
-		} else {
-			log.info("GAEIndexReader.destory(): trying to close reader, but some thread hold the handle yet!");
-			canClose = true;
-		}
-	}
-	//--------------------------------------------------------------------------
-	
-	@Override
-	protected void doClose() throws IOException {
-		this.in.doClose();
-	}
+  public synchronized void borrow() throws IOException {
+    assertOpen();
+    this.refCurCount++;
+    this.refTotalCount++;
+    this.lastUsed = System.currentTimeMillis();
+  }
 
-	@Override
-	protected void doCommit() throws IOException {
-		this.in.doCommit();
-	}
+  public synchronized void returnBack() throws IOException {
+    this.refCurCount--;
+    if (refCurCount <= 0 && canClose) {
+      log.info("GAEIndexReader.close(): no thread hold the reader, trying to close it!");
+      isClosed = true;
+      this.in.close();
+    }
+  }
 
-	@Override
-	protected void doDelete(int docNum) throws CorruptIndexException,
-			IOException {
-		this.in.doDelete(docNum);
-	}
+  protected synchronized void destory() throws IOException {
+    if (refCurCount <= 0) {
+      log.info("GAEIndexReader.destory(): no thread hold the reader, trying to close it!");
+      isClosed = true;
+      this.in.close();
+    } else {
+      log.info("GAEIndexReader.destory(): trying to close reader, but some thread hold the handle yet!");
+      canClose = true;
+    }
+  }
 
-	@Override
-	protected void doSetNorm(int doc, String field, byte value)
-			throws CorruptIndexException, IOException {
-		this.in.doSetNorm(doc, field, value);
-	}
+  //--------------------------------------------------------------------------
 
-	@Override
-	protected void doUndeleteAll() throws CorruptIndexException, IOException {
-		this.in.doUndeleteAll();
-	}
+  @Override
+  protected void doClose() throws IOException {
+    this.in.doClose();
+  }
 
-	@Override
-	public int docFreq(Term t) throws IOException {
-		return this.in.docFreq(t);
-	}
+  @Override
+  protected void doCommit() throws IOException {
+    this.in.doCommit();
+  }
 
-	@Override
-	public Document document(int n, FieldSelector fieldSelector)
-			throws CorruptIndexException, IOException {
-		return this.in.document(n, fieldSelector);
-	}
+  @Override
+  protected void doDelete(int docNum) throws CorruptIndexException, IOException {
+    this.in.doDelete(docNum);
+  }
 
-	@Override
-	public Collection getFieldNames(FieldOption fldOption) {
-		return this.in.getFieldNames(fldOption);
-	}
+  @Override
+  protected void doSetNorm(int doc, String field, byte value) throws CorruptIndexException, IOException {
+    this.in.doSetNorm(doc, field, value);
+  }
 
-	@Override
-	public TermFreqVector getTermFreqVector(int docNumber, String field)
-			throws IOException {
-		return this.in.getTermFreqVector(docNumber, field);
-	}
+  @Override
+  protected void doUndeleteAll() throws CorruptIndexException, IOException {
+    this.in.doUndeleteAll();
+  }
 
-	@Override
-	public void getTermFreqVector(int docNumber, TermVectorMapper mapper)
-			throws IOException {
-		this.in.getTermFreqVector(docNumber, mapper);
-	}
+  @Override
+  public int docFreq(Term t) throws IOException {
+    return this.in.docFreq(t);
+  }
 
-	@Override
-	public void getTermFreqVector(int docNumber, String field,
-			TermVectorMapper mapper) throws IOException {
-		this.in.getTermFreqVector(docNumber, field, mapper);
-	}
+  @Override
+  public Document document(int n, FieldSelector fieldSelector) throws CorruptIndexException, IOException {
+    return this.in.document(n, fieldSelector);
+  }
 
-	@Override
-	public TermFreqVector[] getTermFreqVectors(int docNumber)
-			throws IOException {
-		return this.in.getTermFreqVectors(docNumber);
-	}
+  @Override
+  public Collection getFieldNames(FieldOption fldOption) {
+    return this.in.getFieldNames(fldOption);
+  }
 
-	@Override
-	public boolean hasDeletions() {
-		return this.in.hasDeletions();
-	}
+  @Override
+  public TermFreqVector getTermFreqVector(int docNumber, String field) throws IOException {
+    return this.in.getTermFreqVector(docNumber, field);
+  }
 
-	@Override
-	public boolean isDeleted(int n) {
-		return this.in.isDeleted(n);
-	}
+  @Override
+  public void getTermFreqVector(int docNumber, TermVectorMapper mapper) throws IOException {
+    this.in.getTermFreqVector(docNumber, mapper);
+  }
 
-	@Override
-	public int maxDoc() {
-		return this.in.maxDoc();
-	}
+  @Override
+  public void getTermFreqVector(int docNumber, String field, TermVectorMapper mapper) throws IOException {
+    this.in.getTermFreqVector(docNumber, field, mapper);
+  }
 
-	@Override
-	public byte[] norms(String field) throws IOException {
-		return this.in.norms(field);
-	}
+  @Override
+  public TermFreqVector[] getTermFreqVectors(int docNumber) throws IOException {
+    return this.in.getTermFreqVectors(docNumber);
+  }
 
-	@Override
-	public void norms(String field, byte[] bytes, int offset)
-			throws IOException {
-		this.in.norms(field, bytes, offset);
-	}
+  @Override
+  public boolean hasDeletions() {
+    return this.in.hasDeletions();
+  }
 
-	@Override
-	public int numDocs() {
-		return this.in.numDocs();
-	}
+  @Override
+  public boolean isDeleted(int n) {
+    return this.in.isDeleted(n);
+  }
 
-	@Override
-	public TermDocs termDocs() throws IOException {
-		return this.in.termDocs();
-	}
+  @Override
+  public int maxDoc() {
+    return this.in.maxDoc();
+  }
 
-	@Override
-	public TermPositions termPositions() throws IOException {
-		return this.in.termPositions();
-	}
+  @Override
+  public byte[] norms(String field) throws IOException {
+    return this.in.norms(field);
+  }
 
-	@Override
-	public TermEnum terms() throws IOException {
-		return this.in.terms();
-	}
+  @Override
+  public void norms(String field, byte[] bytes, int offset) throws IOException {
+    this.in.norms(field, bytes, offset);
+  }
 
-	@Override
-	public TermEnum terms(Term t) throws IOException {
-		return this.in.terms(t);
-	}
+  @Override
+  public int numDocs() {
+    return this.in.numDocs();
+  }
 
-	@Override
-	public boolean equals(Object obj) {
-		if (obj instanceof GAEIndexReader) {
-			GAEIndexReader another = (GAEIndexReader) obj;
-			if (another.in.equals(this.in)) {
-				return true;
-			}
-		}
-		return false;
-	}
+  @Override
+  public TermDocs termDocs() throws IOException {
+    return this.in.termDocs();
+  }
 
-	@Override
-	public int hashCode() {
-		return this.in.hashCode();
-	}
+  @Override
+  public TermPositions termPositions() throws IOException {
+    return this.in.termPositions();
+  }
+
+  @Override
+  public TermEnum terms() throws IOException {
+    return this.in.terms();
+  }
+
+  @Override
+  public TermEnum terms(Term t) throws IOException {
+    return this.in.terms(t);
+  }
+
+  @Override
+  public boolean equals(Object obj) {
+    if (obj instanceof GAEIndexReader) {
+      GAEIndexReader another = (GAEIndexReader) obj;
+      if (another.in.equals(this.in)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public int hashCode() {
+    return this.in.hashCode();
+  }
 }
