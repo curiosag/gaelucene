@@ -20,90 +20,90 @@ package org.apache.lucene.store;
 import java.io.IOException;
 
 /**
- * GAEFile based IndexInput
- * @author lhelper
+ * A memory-resident {@link IndexInput} implementation like the {@link RAMInputStream}.
+ * 
+ * $Id:$
  */
 public class GAEIndexInput extends IndexInput implements Cloneable {
-	static final int BUFFER_SIZE = GAEFile.SEGMENT_LENGTH;
+  static final int BUFFER_SIZE = GAEFile.SEGMENT_LENGTH;
 
-	private GAEFile file;
-	private long length;
+  private GAEFile file;
+  private long length;
 
-	private byte[] currentBuffer;
-	private int currentBufferIndex;
-	
-	private int bufferPosition;
-	private long bufferStart;
-	private int bufferLength;
+  private byte[] currentBuffer;
+  private int currentBufferIndex;
 
-	GAEIndexInput(GAEFile f) throws IOException {
-	  file = f;
-	  length = file.getLength();
-	  if (length/BUFFER_SIZE >= Integer.MAX_VALUE) {
-	    throw new IOException("Too large RAMFile! "+length); 
-	  }
+  private int bufferPosition;
+  private long bufferStart;
+  private int bufferLength;
 
-	  // make sure that we switch to the
-	  // first needed buffer lazily
-	  currentBufferIndex = -1;
-	  currentBuffer = null;
-	}
+  GAEIndexInput(GAEFile f) throws IOException {
+    file = f;
+    length = file.getLength();
+    if (length / BUFFER_SIZE >= Integer.MAX_VALUE) {
+      throw new IOException("Too large RAMFile! " + length);
+    }
 
-	public void close() {
-		// nothing to do here
-		// System.out.println("GAEIndexInput.close(" + this.file.getName() + ")");
-	}
+    // make sure that we switch to the
+    // first needed buffer lazily
+    currentBufferIndex = -1;
+    currentBuffer = null;
+  }
 
-	public long length() {
-	  return length;
-	}
+  public void close() {
+    // nothing to do here
+  }
 
-	public byte readByte() throws IOException {
-	  if (bufferPosition >= bufferLength) {
-	    currentBufferIndex++;
-	    switchCurrentBuffer();
-	  }
-	  return currentBuffer[bufferPosition++];
-	}
+  public long length() {
+    return length;
+  }
 
-	public void readBytes(byte[] b, int offset, int len) throws IOException {
-	  while (len > 0) {
-	    if (bufferPosition >= bufferLength) {
-	      currentBufferIndex++;
-	      switchCurrentBuffer();
-	    }
+  public byte readByte() throws IOException {
+    if (bufferPosition >= bufferLength) {
+      currentBufferIndex++;
+      switchCurrentBuffer();
+    }
+    return currentBuffer[bufferPosition++];
+  }
 
-	    int remainInBuffer = bufferLength - bufferPosition;
-	    int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
-	    System.arraycopy(currentBuffer, bufferPosition, b, offset, bytesToCopy);
-	    offset += bytesToCopy;
-	    len -= bytesToCopy;
-	    bufferPosition += bytesToCopy;
-	  }
-	}
+  public void readBytes(byte[] b, int offset, int len) throws IOException {
+    while (len > 0) {
+      if (bufferPosition >= bufferLength) {
+        currentBufferIndex++;
+        switchCurrentBuffer();
+      }
 
-	private final void switchCurrentBuffer() throws IOException {
-	  if (currentBufferIndex >= file.getSegmentCount()) {
-	    // end of file reached, no more buffers left
-	    throw new IOException("Read past EOF");
-	  } else {
-	    currentBuffer = file.getSegment(currentBufferIndex);
-	    bufferPosition = 0;
-	    bufferStart = (long) BUFFER_SIZE * (long) currentBufferIndex;
-	    long buflen = length - bufferStart;
-	    bufferLength = buflen > BUFFER_SIZE ? BUFFER_SIZE : (int) buflen;
-	  }
-	}
+      int remainInBuffer = bufferLength - bufferPosition;
+      int bytesToCopy = len < remainInBuffer ? len : remainInBuffer;
+      System.arraycopy(currentBuffer, bufferPosition, b, offset, bytesToCopy);
+      offset += bytesToCopy;
+      len -= bytesToCopy;
+      bufferPosition += bytesToCopy;
+    }
+  }
 
-	public long getFilePointer() {
-	  return currentBufferIndex < 0 ? 0 : bufferStart + bufferPosition;
-	}
+  private final void switchCurrentBuffer() throws IOException {
+    if (currentBufferIndex >= file.getSegmentCount()) {
+      // end of file reached, no more buffers left
+      throw new IOException("Read past EOF");
+    } else {
+      currentBuffer = file.getSegment(currentBufferIndex);
+      bufferPosition = 0;
+      bufferStart = (long) BUFFER_SIZE * (long) currentBufferIndex;
+      long buflen = length - bufferStart;
+      bufferLength = buflen > BUFFER_SIZE ? BUFFER_SIZE : (int) buflen;
+    }
+  }
 
-	public void seek(long pos) throws IOException {
-	  if (currentBuffer==null || pos < bufferStart || pos >= bufferStart + BUFFER_SIZE) {
-	    currentBufferIndex = (int) (pos / BUFFER_SIZE);
-	    switchCurrentBuffer();
-	  }
-	  bufferPosition = (int) (pos % BUFFER_SIZE);
-	}
+  public long getFilePointer() {
+    return currentBufferIndex < 0 ? 0 : bufferStart + bufferPosition;
+  }
+
+  public void seek(long pos) throws IOException {
+    if (currentBuffer == null || pos < bufferStart || pos >= bufferStart + BUFFER_SIZE) {
+      currentBufferIndex = (int) (pos / BUFFER_SIZE);
+      switchCurrentBuffer();
+    }
+    bufferPosition = (int) (pos % BUFFER_SIZE);
+  }
 }

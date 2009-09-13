@@ -23,60 +23,65 @@ import javax.jdo.annotations.PersistenceCapable;
 import javax.jdo.annotations.Persistent;
 import javax.jdo.annotations.PrimaryKey;
 
+/**
+ * GAEIndexCategory is the identifier of different indices.
+ * 
+ * $Id:$
+ */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAEIndexCategory {
-    @PrimaryKey
-    @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
-    private Long id;
-    
-    @Persistent
-    private String cat;
-    
-    @Persistent
-    private Long ver;
+  @PrimaryKey
+  @Persistent(valueStrategy = IdGeneratorStrategy.IDENTITY)
+  private Long id;
 
-    @Persistent
-    private Long lastModified;
+  @Persistent
+  private String cat;
 
-	public Long getId() {
-		return id;
-	}
+  @Persistent
+  private Long ver;
 
-	public void setId(Long id) {
-		this.id = id;
-	}
+  @Persistent
+  private Long lastModified;
 
-	public String getCat() {
-		return cat;
-	}
+  public Long getId() {
+    return id;
+  }
 
-	public void setCat(String cat) {
-		this.cat = cat;
-	}
+  public void setId(Long id) {
+    this.id = id;
+  }
 
-	public Long getVer() {
-		return ver;
-	}
+  public String getCat() {
+    return cat;
+  }
 
-	public void setVer(Long ver) {
-		this.ver = ver;
-	}
+  public void setCat(String cat) {
+    this.cat = cat;
+  }
 
-	public Long getLastModified() {
-		return lastModified;
-	}
+  public Long getVer() {
+    return ver;
+  }
 
-	public void setLastModified(Long lastModified) {
-		this.lastModified = lastModified;
-	}
-	
-	public boolean lessThan(GAEIndexCategory obj) {
-		if (this.ver.longValue() < obj.ver.longValue()) {
-			return true;
-		}
-		if (this.lastModified.longValue() < obj.lastModified.longValue()) {
-			return true;
-		}
-		return false;
-	}
+  public void setVer(Long ver) {
+    this.ver = ver;
+  }
+
+  public Long getLastModified() {
+    return lastModified;
+  }
+
+  public void setLastModified(Long lastModified) {
+    this.lastModified = lastModified;
+  }
+
+  public boolean lessThan(GAEIndexCategory obj) {
+    if (this.ver.longValue() < obj.ver.longValue()) {
+      return true;
+    }
+    if (this.lastModified.longValue() < obj.lastModified.longValue()) {
+      return true;
+    }
+    return false;
+  }
 }
