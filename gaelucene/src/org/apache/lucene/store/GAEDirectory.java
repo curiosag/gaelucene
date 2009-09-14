@@ -32,7 +32,7 @@ import org.apache.gaelucene.PMF;
 /**
  * A read-only google datastore based {@link Directory} implementation.
  *
- * $Id:$
+ * $Id$
  */
 public class GAEDirectory extends Directory {
   // global logger
