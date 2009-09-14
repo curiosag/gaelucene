@@ -30,7 +30,7 @@ import javax.jdo.annotations.PrimaryKey;
  * GAEFile stands for an index file, the file's byte content was splited into
  * multi <code>GAEFileContent</code>.
  * 
- * $Id:$
+ * $Id$
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAEFile {
