@@ -31,7 +31,7 @@ import com.google.appengine.api.users.UserServiceFactory;
  * Permission/Authentication framework learned from Mvnforum 
  * @see http://www.mvnforum.com/
  * 
- * $Id:$
+ * $Id$
  */
 public class GAELuceneOnlineUserManager {
   private static GAELuceneOnlineUserManager instance = new GAELuceneOnlineUserManager();

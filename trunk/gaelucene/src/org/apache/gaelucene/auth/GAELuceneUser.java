@@ -28,7 +28,7 @@ import javax.jdo.annotations.PrimaryKey;
 /**
  * User Entity
  * 
- * $Id:$
+ * $Id$
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAELuceneUser {

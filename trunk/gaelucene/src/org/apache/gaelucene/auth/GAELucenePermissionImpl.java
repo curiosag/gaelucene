@@ -21,7 +21,7 @@ package org.apache.gaelucene.auth;
  * Permission/Authentication framework learned from Mvnforum 
  * @see http://www.mvnforum.com/
  * 
- * $Id:$
+ * $Id$
  */
 public class GAELucenePermissionImpl extends GAELuceneAbstractPermission implements GAELucenePermission {
   boolean isAuthenticated = false;

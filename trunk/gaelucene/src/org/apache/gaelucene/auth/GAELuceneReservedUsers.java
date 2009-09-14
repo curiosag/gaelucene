@@ -31,7 +31,7 @@ import java.util.List;
  * Reserved users that defined in 'gaelucene-users.txt'. The reserved users act
  * as System Administrator.
  * 
- * $Id:$
+ * $Id$
  */
 public class GAELuceneReservedUsers {
   private static HashSet<String> reservedUsers = new HashSet<String>();

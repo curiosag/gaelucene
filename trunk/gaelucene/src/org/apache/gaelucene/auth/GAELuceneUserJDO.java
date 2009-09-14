@@ -28,7 +28,7 @@ import org.apache.gaelucene.PMF;
 /**
  * User Entity JDO
  * 
- * $Id:$
+ * $Id$
  */
 public class GAELuceneUserJDO {
   public static GAELuceneUser get(Long uId) {
