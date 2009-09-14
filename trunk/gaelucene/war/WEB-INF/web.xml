@@ -5,12 +5,12 @@
 
 <web-app xmlns="http://java.sun.com/xml/ns/javaee" version="2.5">
   <servlet>
-    <servlet-name>GAELuceneServlet</servlet-name>
-    <servlet-class>org.apache.gaelucene.dashboard.GAELuceneServlet</servlet-class>
+    <servlet-name>GAELuceneAdminServlet</servlet-name>
+    <servlet-class>org.apache.gaelucene.dashboard.GAELuceneAdminServlet</servlet-class>
   </servlet>
   <servlet-mapping>
-    <servlet-name>GAELuceneServlet</servlet-name>
-    <url-pattern>/dashboard/gaelucene</url-pattern>
+    <servlet-name>GAELuceneAdminServlet</servlet-name>
+    <url-pattern>/gaelucenedashboard/*</url-pattern>
   </servlet-mapping>
 
   <welcome-file-list>
