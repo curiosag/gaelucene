@@ -22,7 +22,7 @@ import java.io.IOException;
 /**
  * A memory-resident {@link IndexInput} implementation like the {@link RAMInputStream}.
  * 
- * $Id:$
+ * $Id$
  */
 public class GAEIndexInput extends IndexInput implements Cloneable {
   static final int BUFFER_SIZE = GAEFile.SEGMENT_LENGTH;

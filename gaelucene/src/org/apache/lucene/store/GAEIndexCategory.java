@@ -26,7 +26,7 @@ import javax.jdo.annotations.PrimaryKey;
 /**
  * GAEIndexCategory is the identifier of different indices.
  * 
- * $Id:$
+ * $Id$
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAEIndexCategory {

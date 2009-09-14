@@ -28,7 +28,7 @@ import com.google.appengine.api.datastore.Blob;
 /**
  * GAEFileContent stands for (part of) the index file's byte content.
  * 
- * $Id:$
+ * $Id$
  */
 @PersistenceCapable(identityType = IdentityType.APPLICATION)
 public class GAEFileContent {
