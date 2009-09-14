@@ -35,7 +35,7 @@ import org.apache.lucene.store.GAEIndexCategory;
 
 /**
  * Pool for {@link GAEIndexReader}
- * $Id:$
+ * $Id$
  */
 public class GAEIndexReaderPool {
   // global logger

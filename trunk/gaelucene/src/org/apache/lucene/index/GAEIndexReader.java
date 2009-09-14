@@ -28,7 +28,7 @@ import org.apache.lucene.store.GAEDirectory;
 /**
  * Wrapper for IndexReader that cached in {@link GAEIndexReaderPool}
  * 
- * $Id:$
+ * $Id$
  */
 public class GAEIndexReader extends IndexReader {
   // global logger
