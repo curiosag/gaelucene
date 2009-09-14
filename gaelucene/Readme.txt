@@ -57,9 +57,26 @@ Deploy GAELucene onto google appengine
 
   
 Push fresh index onto google datastore
-  The 
+
+  Use LuceneIndexPushUtil to interact with your deploied GAELucene webapp.
+  $ java org.apache.gaelucene.tools.LuceneIndexPushUtil 
+    -app-url ${gaeAppURL}
+    -auth-cookie ${authCookie}
+    -src ${path-to-index-folder}
+    -cat ${index-category}
+    -rec-file ${path-to-rec-file}
+
+  $ java -Xms128m -Xmx256m org.apache.gaelucene.tools.LuceneIndexPushUtil
+    -app-url "http://gaelucene.appspot.com/gaelucenedashboard"
+    -auth-cookie "ahlogincookie=gaelucene@gmail.com:false:12093021971246851751"
+    -src "${DATA}/demo/index"
+    -cat "demo"
+    -rec-file "${DATA}/demo/uploaded.rec"
 
 Case:
 
 Here, so.3gmatrix.cn, is a site built with GAELucene. 
 
+Learned from
+
+[http://www.mvnforum.com/ mvnForum] - The Permission/Authentication framework
