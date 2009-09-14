@@ -23,7 +23,7 @@ import javax.servlet.http.HttpServletRequest;
  * Permission/Authentication framework learned from Mvnforum 
  * @see http://www.mvnforum.com/
  * 
- * $Id:$
+ * $Id$
  */
 public class GAELuceneOnlineUser {
   boolean isGuest;
