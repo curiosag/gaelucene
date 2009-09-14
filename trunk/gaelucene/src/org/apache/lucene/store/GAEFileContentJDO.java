@@ -50,6 +50,7 @@ public class GAEFileContentJDO {
     GAEFileContent gaeContent = null;
     if (gaeContents.size() > 0) {
       gaeContent = gaeContents.get(0);
+      pm.retrieve(gaeContent);
     }
     pm.close();
     return gaeContent;
