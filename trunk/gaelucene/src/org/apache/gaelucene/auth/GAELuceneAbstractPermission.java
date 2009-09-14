@@ -21,7 +21,7 @@ package org.apache.gaelucene.auth;
  * Permission/Authentication framework learned from Mvnforum 
  * @see http://www.mvnforum.com/
  * 
- * $Id:$
+ * $Id$
  */
 public abstract class GAELuceneAbstractPermission implements GAELucenePermission {
   public static final int[] globalCombinedPermissionArray = { PERMISSION_SYSTEM_ADMIN, };
