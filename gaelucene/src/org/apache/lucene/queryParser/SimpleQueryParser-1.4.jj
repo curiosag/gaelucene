@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  *
- * $Id: SimpleQueryParser.jj,v 1.8 2006/05/31 09:44:38 lhelper Exp $
+ * $Id$
  */
 
 options {

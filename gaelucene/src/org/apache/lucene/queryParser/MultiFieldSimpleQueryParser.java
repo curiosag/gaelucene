@@ -37,7 +37,7 @@ import org.apache.lucene.search.TermQuery;
  * A QueryParser which constructs queries to search multiple fields.
  *
  * @author <a href="mailto:kelvin@relevanz.com">Kelvin Tan</a>
- * @version $Revision: 1.4 $
+ * @version $Revision$
  */
 public class MultiFieldSimpleQueryParser extends SimpleQueryParser
 {
