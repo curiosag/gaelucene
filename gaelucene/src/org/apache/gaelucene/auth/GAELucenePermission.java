@@ -21,7 +21,7 @@ package org.apache.gaelucene.auth;
  * Permission/Authentication framework learned from Mvnforum 
  * @see http://www.mvnforum.com/
  * 
- * $Id:$
+ * $Id$
  */
 public interface GAELucenePermission {
   public static final int PERMISSION_AUTHENTICATED = 1;
