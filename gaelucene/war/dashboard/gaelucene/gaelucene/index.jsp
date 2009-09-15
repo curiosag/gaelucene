@@ -18,7 +18,7 @@ ul.hotwords li {float:left; padding:4px 10px 4px 6px;}
 <ul>
 <li><a href="<%=GAELuceneConfig.getUrlPattern()%>/list"/>Files Management</a> - list indices files</li>
 <%if(permission.canAdminSystem()) {%>
-<li><a href="<%=GAELuceneConfig.getUrlPattern()%>/importpackagedindex?dir=indices/mobile/index&cat=mobile"/>Import Indices</a> - import packaged indices onto google datastore</li>
+<li><a href="<%=GAELuceneConfig.getUrlPattern()%>/importpackagedindex?dir=indices/demo/index&cat=demo"/>Import Indices</a> - import packaged indices onto google datastore</li>
 <%}%>
 </ul>
 <ul>
