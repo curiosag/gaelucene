@@ -6,16 +6,12 @@ import="java.util.Collection"
 import="java.util.Date"
 import="java.util.Iterator"
 
-
 import="org.apache.lucene.analysis.standard.StandardAnalyzer"
 import="org.apache.lucene.document.Document"
 import="org.apache.lucene.index.GAEIndexReader"
 import="org.apache.lucene.index.GAEIndexReaderPool"
 import="org.apache.lucene.queryParser.MultiFieldQueryParser"
 import="org.apache.lucene.search.BooleanClause"
-import="org.apache.lucene.search.highlight.Fragmenter"
-import="org.apache.lucene.search.highlight.Highlighter"
-import="org.apache.lucene.search.highlight.NullFragmenter"
 import="org.apache.lucene.search.highlight.SimpleHTMLFormatter"
 import="org.apache.lucene.search.highlight.WebLuceneHighlighter"
 import="org.apache.lucene.search.highlight.WebLuceneQueryScorer"
@@ -92,9 +88,6 @@ queryObject:<%=queryObject%><br>
 if(resultCount > 0) {
   WebLuceneQueryScorer queryScorer=new WebLuceneQueryScorer(queryObject);
   SimpleHTMLFormatter htmlFormater=new SimpleHTMLFormatter("<font color=#ff0000>", "</font>");
-  Fragmenter nullFragmenter=new NullFragmenter();
-  Highlighter nonFragmentedHighlighter=new Highlighter(htmlFormater, queryScorer);
-  nonFragmentedHighlighter.setTextFragmenter(nullFragmenter);
 
   for (int i=0; i < resultCount; i++) {
     Document doc=hits.doc(i);
@@ -106,7 +99,7 @@ if(resultCount > 0) {
 %>
 <li>
 <h3>
-<%=nonFragmentedHighlighter.getBestFragment(analyzer, "title", title)%>
+<%=WebLuceneHighlighter.highlight(title, htmlFormater, queryScorer, analyzer, 200)%>
 </h3>
 <div>
 <%=WebLuceneHighlighter.highlight(content, htmlFormater, queryScorer, analyzer, 300)%>...<br>
