@@ -162,13 +162,14 @@ public class AdminModuleProcessor {
       response.sendRedirect(userManager.createLoginURL(request));
       return null;
     } catch (Exception e) {
-      responseURI = GAELuceneConfig.getUrlPattern() + "/error";
+      request.setAttribute("requestURI", GAELuceneConfig.getUrlPattern() + pathInfo);
       request.setAttribute("exception", e);
+      responseURI = "/dashboard/gaelucene/error.jsp";
     }
 
     if (log.isLoggable(Level.INFO)) {
       long timeUsed = System.currentTimeMillis() - timeStart;
-      log.info("AdminModuleProcessor - user(" + userEmail + ") - responseURI=" + pathInfo + ", " + timeUsed
+      log.info("AdminModuleProcessor - user(" + userEmail + ") - responseURI=" + responseURI + ", " + timeUsed
           + " ms used.");
     }
     return responseURI;
