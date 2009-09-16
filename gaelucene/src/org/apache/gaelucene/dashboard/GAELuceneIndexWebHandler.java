@@ -21,6 +21,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.List;
 import java.util.Properties;
@@ -62,7 +63,12 @@ public class GAELuceneIndexWebHandler {
     String dirName = ParamUtil.getString(request, "dir", "").trim();
     String category = ParamUtil.getString(request, "cat", "").trim();
     log.info("trying to import prepackaged index under '" + dirName + "' to db.");
-    File indxDir = new File(this.getClass().getClassLoader().getResource(dirName).getFile());
+    URL resource = this.getClass().getClassLoader().getResource(dirName);
+    if (resource == null) {
+      URL indicesRoot = this.getClass().getClassLoader().getResource("./");
+      throw new IOException("FAILED TO LOCATE '" + dirName + "' UNDER '" + indicesRoot + "'!");
+    }
+    File indxDir = new File(resource.getFile());
     LuceneIndexImportHandler.importToGAEDataStore(indxDir, category);
   }
 
